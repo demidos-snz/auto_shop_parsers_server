@@ -1,5 +1,6 @@
 import os
 import random
+import time
 import typing as t
 from abc import ABC, abstractmethod
 from datetime import datetime
@@ -8,16 +9,14 @@ from random import randint
 
 import pandas as pd
 import requests
-import time
 import validators
 from bs4.element import ResultSet
 from pydantic.v1.fields import FieldInfo
 from requests import Response
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from base.driver import FirefoxDriver
 from base.model import BaseParserModel
-from base.settings import DOWNLOAD_FOLDER
+from base.settings import DOWNLOAD_FOLDER, DEFAULT_DRIVER
 
 REGISTERED_PARSERS: list['Parser'] = []
 
@@ -285,7 +284,7 @@ class Parser(ABC):
             address: str,
             validator: ParserValidator = None,
             writers_handlers: list[ParserWriter] = None,
-            driver: WebDriver = FirefoxDriver(),
+            driver: WebDriver = DEFAULT_DRIVER,
             model: t.Type[BaseParserModel] = BaseParserModel,
     ):
         self.name: str = name
