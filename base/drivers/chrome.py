@@ -10,7 +10,14 @@ class ChromeDriver(WebDriver):
         headless_driver: t.Optional[bool] = settings.get('headless')
         if headless_driver is not None:
             options: Options = Options() if options is None else options
-            options.headless = headless_driver
+            options.add_argument('--headless')
+            options.add_argument('--no-sandbox')
+            options.add_argument('--remote-debugging-port=9222')
+            options.add_argument('--disable-extensions')
+            options.add_argument('--disable-gpu')
+            options.add_argument('--disable-dev-shm-usage')
+
+            service: Service = Service(executable_path='./chromedriver')
 
         super().__init__(options=options, service=service, keep_alive=keep_alive)
 
