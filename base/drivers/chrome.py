@@ -1,5 +1,3 @@
-import typing as t
-
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -7,8 +5,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 class ChromeDriver(WebDriver):
     def __init__(self, settings: dict[str, bool], options: Options = None, service: Service = None, keep_alive=True):
-        headless_driver: t.Optional[bool] = settings.get('headless')
-        if headless_driver is not None:
+        if settings.get('headless'):
             options: Options = Options() if options is None else options
             options.add_argument('--headless')
             options.add_argument('--no-sandbox')

@@ -16,7 +16,7 @@ from requests import Response
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from base.model import BaseParserModel
-from base.settings import DOWNLOAD_FOLDER, DEFAULT_DRIVER
+from base.settings import DOWNLOAD_FOLDER, DEFAULT_DRIVER, DEFAULT_MAKER_VALUE
 
 REGISTERED_PARSERS: list['Parser'] = []
 
@@ -429,12 +429,22 @@ class Parser(ABC):
         else:
             print('bad', set_len_resultsets)
 
-    def run(self, vendor_codes: list[str], only_needful: bool = False) -> list[str]:
+    def run(
+            self,
+            vendor_codes: list[str],
+            makers: list[str] = (DEFAULT_MAKER_VALUE, ),
+            only_needful: bool = False,
+    ) -> list[str]:
+        # fixme validate len vendor_codes == len makers
         self._df: pd.DataFrame = pd.DataFrame()
-        random.shuffle(vendor_codes)
+        data: list[tuple[str, str]] = list(zip(vendor_codes, makers))
+        random.shuffle(data)
 
-        for vendor_code in vendor_codes:
-            vendor_code_data: list[list[t.Any]] = self.__run(vendor_code=vendor_code)
+        for vendor_code, maker in data:
+            vendor_code_data: list[list[t.Any]] = self.__run(
+                vendor_code=vendor_code,
+                maker=maker,
+            )
 
             df: pd.DataFrame = pd.DataFrame.from_dict(data=dict(zip(self.descriptions_keys_of_model, vendor_code_data)))
 
@@ -454,8 +464,6 @@ class Parser(ABC):
 
         return self._write(data=self._df)
 
-        # self._driver.close()
-
     def _write(self, data: pd.DataFrame) -> list[str]:
         filenames: list[str] = []
 
@@ -473,8 +481,11 @@ class Parser(ABC):
             if filename:
                 filenames.append(filename)
 
-    def __run(self, vendor_code: str) -> list[list[t.Any]]:
-        self._html_of_result_page: str = self.html_of_result_page(vendor_code=vendor_code)
+    def __run(self, vendor_code: str, maker: str) -> list[list[t.Any]]:
+        self._html_of_result_page: str = self.html_of_result_page(
+            vendor_code=vendor_code,
+            maker=maker,
+        )
 
         self._resultsets: tuple[ResultSet, ...] = self._parse_data()
         self.__check_len_resultsets_from_parse_data()
@@ -489,4 +500,3 @@ class Parser(ABC):
     # fixme
     def __add_to_registered_parsers(self):
         pass
-        # REGISTERED_PARSERS.append(self)

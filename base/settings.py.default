@@ -7,3 +7,4 @@ HEADLESS_DRIVER: bool = True
 # for DEFAULT_DRIVER look base/drivers/driver.py
 DEFAULT_DRIVER_CLASS: type[WebDriver] = chrome_cls
 DEFAULT_DRIVER: WebDriver = DEFAULT_DRIVER_CLASS(settings={'headless': HEADLESS_DRIVER})
+DEFAULT_MAKER_VALUE: str = 'all'

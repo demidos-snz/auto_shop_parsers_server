@@ -3,8 +3,10 @@ import typing as t
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
 
 from base.parser import Parser
+from base.settings import DEFAULT_MAKER_VALUE
 
 
 class FrozaParser(Parser):
@@ -13,7 +15,9 @@ class FrozaParser(Parser):
     def _auth(self, *args, **kwargs):
         pass
 
-    def html_of_result_page(self, vendor_code: str) -> str:
+    def html_of_result_page(self, vendor_code: str, maker: str) -> str:
+        page_source: str = ''
+
         self._driver.find_element(value='search-field').clear()
         self._driver.find_element(value='search-field').send_keys(vendor_code)
         self.random_sleep()
@@ -22,13 +26,51 @@ class FrozaParser(Parser):
         self.random_sleep()
 
         try:
-            self._driver.find_element(by=By.XPATH, value="//td[@data-make_name='SKF']").click()
-            self.random_sleep()
+            if maker == DEFAULT_MAKER_VALUE:
+                page_source: str = self.__get_all_pages_source() or self._driver.page_source
+
+            else:
+                webelements_result_table: list[WebElement] = self._driver.find_elements(
+                    by=By.CLASS_NAME,
+                    value='speed_search',
+                )
+                elements_table: list[str] = [el.text.lower() for el in webelements_result_table]
+
+                if maker in elements_table:
+                    maker_web: WebElement = webelements_result_table[elements_table.index(maker)]
+                    self._driver.find_element(
+                        by=By.XPATH,
+                        value=f"//td[@data-make_name='{maker_web.text}']",
+                    ).click()
+                    self.random_sleep()
+
+                    page_source: str = self._driver.page_source
+
+                else:
+                    page_source: str = self.__get_all_pages_source() or self._driver.page_source
+
         except Exception as exc:
             # fixme
             print('nothing')
 
-        return self._driver.page_source
+        return page_source
+
+    def __get_all_pages_source(self) -> str:
+        all_pages_source: list[str] = []
+
+        for row in self._driver.find_elements(
+                by=By.CLASS_NAME,
+                value='row_detail_number',
+        ):
+            row.click()
+            self.random_sleep()
+
+            all_pages_source.append(self._driver.page_source)
+
+            self._driver.back()
+            self.random_sleep()
+
+        return ''.join(all_pages_source)
 
     def _parse_data(self) -> tuple[ResultSet, ...]:
         soup: BeautifulSoup = BeautifulSoup(markup=self._html_of_result_page, features='html.parser')
@@ -81,27 +123,3 @@ class FrozaParser(Parser):
             res.append(text)
 
         return res
-
-
-# fixme
-# REGISTERED_PARSERS.append(FrozaParser(name='froza', address='https://froza.ru'))
-
-
-if __name__ == '__main__':
-    froza: FrozaParser = FrozaParser(name='froza', address='https://froza.ru')
-    froza.run(vendor_codes=[
-        'Vkba 5314',
-        'Vkba 5549',
-        'Vkba 5423',
-        'Vkhb 2404 s',
-        'Vkt 8956',
-        'Vkhb 2401 s',
-        'Vkba 5377',
-        'Vkpc 7045',
-        'Vkpc 7043',
-        'Vkhb 2041',
-        '47691',
-        '47697',
-        '35058',
-        'Vkmcv 55007',
-    ])
