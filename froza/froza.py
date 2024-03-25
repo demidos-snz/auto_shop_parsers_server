@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 from base.parser import Parser
-from base.settings import DEFAULT_MAKER_VALUE
+from settings import DEFAULT_MAKER_VALUE
 
 
 class FrozaParser(Parser):

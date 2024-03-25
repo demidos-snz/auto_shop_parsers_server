@@ -2,9 +2,9 @@ import uvicorn
 from fastapi import FastAPI, status
 
 from base.parser import REGISTERED_PARSERS
-from base.settings import DEFAULT_MAKER_VALUE
 from froza.froza import FrozaParser
 from models.models import VendorCode, VC, VC_, VCPair
+from settings import DEFAULT_MAKER_VALUE
 
 app: FastAPI = FastAPI()
 

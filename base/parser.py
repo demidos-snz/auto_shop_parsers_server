@@ -16,7 +16,7 @@ from requests import Response
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from base.model import BaseParserModel
-from base.settings import DOWNLOAD_FOLDER, DEFAULT_DRIVER, DEFAULT_MAKER_VALUE
+from settings import DOWNLOAD_FOLDER, DEFAULT_DRIVER, DEFAULT_MAKER_VALUE
 
 REGISTERED_PARSERS: list['Parser'] = []
 

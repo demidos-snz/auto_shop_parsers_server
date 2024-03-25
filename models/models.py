@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from base.settings import DEFAULT_MAKER_VALUE
+from settings import DEFAULT_MAKER_VALUE
 
 
 class VendorCode(BaseModel):

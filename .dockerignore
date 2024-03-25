@@ -1,5 +1,5 @@
 /venv
 /.idea
 /.git
-/base/settings.py.default
+/settings.py.default
 chromedriver
