@@ -1,8 +1,8 @@
 from selenium.webdriver.remote.webdriver import WebDriver
+
 from base.drivers.drivers_cls import chrome_cls
 
-
-DOWNLOAD_FOLDER: str = '/home/downloads'
+DOWNLOAD_FOLDER: str = '/app/downloads'
 HEADLESS_DRIVER: bool = True
 # for DEFAULT_DRIVER look base/drivers/driver.py
 DEFAULT_DRIVER_CLASS: type[WebDriver] = chrome_cls

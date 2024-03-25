@@ -1,1 +1,4 @@
 /venv
+/.idea
+/.git
+/base/settings.py.default
