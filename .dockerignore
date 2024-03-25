@@ -2,3 +2,4 @@
 /.idea
 /.git
 /base/settings.py.default
+chromedriver

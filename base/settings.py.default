@@ -3,8 +3,14 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from base.drivers.drivers_cls import chrome_cls
 
 DOWNLOAD_FOLDER: str = '/app/downloads'
+
 HEADLESS_DRIVER: bool = True
+CHROMEDRIVER_PATH: str = '/usr/bin/chromedriver'
 # for DEFAULT_DRIVER look base/drivers/driver.py
 DEFAULT_DRIVER_CLASS: type[WebDriver] = chrome_cls
-DEFAULT_DRIVER: WebDriver = DEFAULT_DRIVER_CLASS(settings={'headless': HEADLESS_DRIVER})
+DEFAULT_DRIVER: WebDriver = DEFAULT_DRIVER_CLASS(
+    settings={'headless': HEADLESS_DRIVER},
+    chromedriver_path=CHROMEDRIVER_PATH,
+)
+
 DEFAULT_MAKER_VALUE: str = 'all'
